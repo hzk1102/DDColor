@@ -1,0 +1,65 @@
+# --- BƯỚC 1: Chuẩn bị môi trường sạch (Python 3.10 là ổn định nhất) ---
+conda create -n ddcolor310 python=3.10 -y
+conda activate ddcolor310
+
+# --- BƯỚC 2: Cài đặt các thư viện "khó ở" bằng Conda ---
+# Dùng Conda để cài binary có sẵn, tránh lỗi biên dịch C++ (CMake error)
+conda install -c conda-forge dlib -y
+
+# Cài PyTorch hỗ trợ GPU (Cần cài trước khi pip install các gói khác)
+conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia -y
+
+# --- BƯỚC 3: Cài đặt các thư viện phụ trợ (Tắt chế độ cách ly) ---
+# Cài trước các gói build tools
+pip install setuptools wheel numpy cython
+
+# Cài BasicSR và Ninja: Dùng cờ --no-build-isolation để nó nhận diện được PyTorch đã cài ở trên
+pip install basicsr ninja imageio-ffmpeg --no-build-isolation
+
+# --- BƯỚC 4: Cài đặt DDColor (Quan trọng nhất) ---
+# Di chuyển vào thư mục code (thay đổi đường dẫn nếu cần)
+cd ~/DDColor
+
+# Lệnh cài đặt "Thần thánh":
+# -e: Editable (cho phép sửa code)
+# --no-build-isolation: Để nhìn thấy Torch và BasicSR hệ thống
+# --no-deps: Không tự động cài lại các gói linh tinh gây xung đột version
+pip install -e . --no-build-isolation --no-deps
+
+# --- BƯỚC 5: Cài bù các thư viện thiếu (Do dùng --no-deps ở trên) ---
+# Cài modelscope (để tải model), timm, và các thư viện xử lý ảnh
+pip install modelscope timm ml_collections opencv-python-headless
+
+# can nhac infer_hf
+
+# --- BƯỚC 6: Tải Model (Chạy thử) ---
+# python setup2.py
+
+
+
+python data_list/get_meta_file.py --output-name data_list/ViCoW_Dataset.txt --data-path ./ViCoW_Dataset/Color_image/VIDEO1_NhungNguoiVietLenHuyenThoai
+
+
+python -m torch.distributed.launch --nproc_per_node=4 --master_port=3721 basicsr/train.py -opt options/train/train_ddcolor.yml --auto_resume --launcher pytorch
+
+
+```sh
+sh scripts/train.sh
+```
+
+tensorboard --logdir=tb_logger/train_ddcolor_l --port=6006
+
+
+python infer.py --model_path models/ddcolor.pt --input /home/h/DDColor/ViCoW_Dataset/Grayscale_image/VIDEO1_NhungNguoiVietLenHuyenThoai --output /home/h/DDColor/ViCoW_Dataset/Grayscale_image/VIDEO1_NhungNguoiVietLenHuyenThoai_done --input_size 512 --model_size large
+
+mkdir /home/h/DDColor/ViCoW_Dataset/Grayscale_image/OK_VIDEO1_NhungNguoiVietLenHuyenThoai
+sudo chown -R h:h /home/h/DDColor/ViCoW_Dataset/Grayscale_image/OK_VIDEO1_NhungNguoiVietLenHuyenThoai
+
+mkdir /home/h/DDColor/ViCoW_Dataset/Grayscale_image/OK2_VIDEO1_NhungNguoiVietLenHuyenThoai
+
+python infer.py --input /home/h/DDColor/ViCoW_Dataset/Grayscale_image/VIDEO1_NhungNguoiVietLenHuyenThoai --output /home/h/DDColor/ViCoW_Dataset/Grayscale_image/OK_VIDEO1_NhungNguoiVietLenHuyenThoai --input_size 512 --model_size large
+
+python infer.py --model_path /home/h/DDColor/experiments/train_ddcolor_l/models/net_g_latest.pth --input /home/h/DDColor/ViCoW_Dataset/Grayscale_image/VIDEO1_NhungNguoiVietLenHuyenThoai --output /home/h/DDColor/ViCoW_Dataset/Grayscale_image/OK2_VIDEO1_NhungNguoiVietLenHuyenThoai --input_size 512 --model_size large
+
+
+python infer.py --model_path pretrain/convnext_large_22k_224.pth --input ViCoW_Dataset/Grayscale_image/VIDEO1_NhungNguoiVietLenHuyenThoai --output  --input_size 512 --model_size large
