@@ -25,6 +25,7 @@ version.py
 *.pth
 *.zip
 *.npy
+*.pt
 
 # template
 
@@ -137,3 +138,5 @@ venv.bak/
 data_list/*.txt
 
 weights/
+
+out/*
