@@ -165,7 +165,7 @@ logger:
   save_checkpoint_freq: 5000 #!!float 1e4
   use_tb_logger: true
   wandb:
-    project: DDColor
+    project: ~
     resume_id: ~
 
 
