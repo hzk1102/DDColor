@@ -12,7 +12,7 @@ import gradio as gr
 import uuid
 
 # --- CẤU HÌNH MODEL ---
-model_path = 'experiments/train_ddcolor_l/models/net_g_25000.pth'  # Đường dẫn tới model đã huấn luyện
+model_path = 'experiments/train_ViCoW_1.2_0.5_freeze_ED_g_pretrain/models/net_g_20000.pth'  # Đường dẫn tới model đã huấn luyện
 input_size = 512
 model_size = 'large'
 

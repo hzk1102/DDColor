@@ -113,57 +113,7 @@ class ColorModel(BaseModel):
         #     else:
         #         logger = get_root_logger()
         #         logger.warning(f'Params {k} will not be optimized.')
-
-        # optim_params_g = self.net_g.parameters()
-
-# =========================================================
-        # 1. SETUP GENERATOR (NET_G) - FREEZE ENCODER & DECODER
-        # =========================================================
-        optim_params_g = []
-        print(f"\n{'='*40}")
-        print(f"🔒 MODE: G - SUPER FREEZE (RefineNet Only)")
-        
-        for k, v in self.net_g.named_parameters():
-            # Logic: Nếu tên chứa encoder hoặc decoder thì KHÓA
-            if 'encoder' in k or 'decoder' in k:
-                v.requires_grad = False 
-            
-            # Những cái còn lại (RefineNet) thì MỞ
-            if v.requires_grad:
-                optim_params_g.append(v)
-
-        # In thống kê G
-        total_g = sum(p.numel() for p in self.net_g.parameters())
-        train_g = sum(p.numel() for p in optim_params_g)
-        print(f"   - Tổng tham số G: {total_g:,}")
-        print(f"   - Tham số G sẽ train: {train_g:,} (Chiếm {train_g/total_g:.1%})")
-
-        # # =========================================================
-        # # 2. SETUP DISCRIMINATOR (NET_D) - TRAIN LAST LAYER ONLY
-        # # =========================================================
-        # optim_params_d = []
-        # print(f"{'-'*40}")
-        # print(f"🔒 MODE: D - TRAIN OUTPUT LAYER ONLY")
-        
-        # for k, v in self.net_d.named_parameters():
-        #     # Mặc định KHÓA HẾT
-        #     v.requires_grad = False
-            
-        #     # Chỉ mở khóa lớp số 8 (Output Head)
-        #     # Dựa trên log cấu trúc bạn cung cấp: layers.8...
-        #     if 'layers.8' in k or 'conv_out' in k:
-        #         v.requires_grad = True
-        #         print(f"   -> D Train: {k}")
-            
-        #     if v.requires_grad:
-        #         optim_params_d.append(v)
-
-        # # In thống kê D
-        # total_d = sum(p.numel() for p in self.net_d.parameters())
-        # train_d = sum(p.numel() for p in optim_params_d)
-        # print(f"   - Tổng tham số D: {total_d:,}")
-        # print(f"   - Tham số D sẽ train: {train_d:,} (Chiếm {train_d/total_d:.1%})")
-        # print(f"{'='*40}\n")
+        optim_params_g = self.net_g.parameters()
 
         # optimizer g
         optim_type = train_opt['optim_g'].pop('type')
