@@ -116,16 +116,17 @@ class ColorModel(BaseModel):
 
         # optim_params_g = self.net_g.parameters()
 
-# =========================================================
+        # =========================================================
         # 1. SETUP GENERATOR (NET_G) - FREEZE ENCODER & DECODER
         # =========================================================
+        logger = get_root_logger()
         optim_params_g = []
-        print(f"\n{'='*40}")
-        print(f"🔒 MODE: G - SUPER FREEZE (RefineNet Only)")
+        logger.info(f"\n{'='*40}")
+        logger.info(f"🔒 MODE: G - encoder FREEZE")
         
         for k, v in self.net_g.named_parameters():
             # Logic: Nếu tên chứa encoder hoặc decoder thì KHÓA
-            if 'encoder' in k or 'decoder' in k:
+            if 'encoder' in k: # or 'decoder' in k:
                 v.requires_grad = False 
             
             # Những cái còn lại (RefineNet) thì MỞ
@@ -135,8 +136,8 @@ class ColorModel(BaseModel):
         # In thống kê G
         total_g = sum(p.numel() for p in self.net_g.parameters())
         train_g = sum(p.numel() for p in optim_params_g)
-        print(f"   - Tổng tham số G: {total_g:,}")
-        print(f"   - Tham số G sẽ train: {train_g:,} (Chiếm {train_g/total_g:.1%})")
+        logger.info(f"   - Tổng tham số G: {total_g:,}")
+        logger.info(f"   - Tham số G sẽ train: {train_g:,} (Chiếm {train_g/total_g:.1%})")
 
         # # =========================================================
         # # 2. SETUP DISCRIMINATOR (NET_D) - TRAIN LAST LAYER ONLY
