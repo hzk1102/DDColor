@@ -1,5 +1,5 @@
 # general settings
-name: train_ViCoW_1.0_0.5_freeze_g_pretrain
+name: train_ViCoW_1.0_0.5_freeze_g_pretrain_512_kaggle
 model_type: ColorModel
 scale: 1
 num_gpu: 1
@@ -16,7 +16,7 @@ datasets:
     io_backend:
       type: disk
 
-    gt_size: 256
+    gt_size: 512
 
     # augmentation config
     ## flip & rotate90
@@ -32,7 +32,7 @@ datasets:
     # data loader
     use_shuffle: true
     num_worker_per_gpu: 8
-    batch_size_per_gpu: 4
+    batch_size_per_gpu: 2
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
 
@@ -43,7 +43,7 @@ datasets:
     # dataroot_gt: path_to_gt
     dataroot_gt: ./dataset/val
     meta_info_file: ['dataset/val.txt']
-    gt_size: 256
+    gt_size: 512
     io_backend:
       type: disk
       
@@ -77,7 +77,7 @@ network_d:
 
 # path
 path:
-  pretrain_network_g: /home/h/DDColor/modelscope/damo/cv_ddcolor_image-colorization/pytorch_model.pt
+  pretrain_network_g: modelscope/damo/cv_ddcolor_image-colorization/pytorch_model.pt
   strict_load_g: false
   resume_state: ~
 

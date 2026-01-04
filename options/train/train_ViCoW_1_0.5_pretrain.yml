@@ -1,5 +1,5 @@
 # general settings
-name: train_ViCoW_1.0_0.5_freeze_g_pretrain
+name: train_ViCoW_1_0.5_pretrain
 model_type: ColorModel
 scale: 1
 num_gpu: 1
@@ -31,8 +31,8 @@ datasets:
 
     # data loader
     use_shuffle: true
-    num_worker_per_gpu: 8
-    batch_size_per_gpu: 4
+    num_worker_per_gpu: 6
+    batch_size_per_gpu: 1
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
 
@@ -77,14 +77,14 @@ network_d:
 
 # path
 path:
-  pretrain_network_g: /home/h/DDColor/modelscope/damo/cv_ddcolor_image-colorization/pytorch_model.pt
+  pretrain_network_g: modelscope/damo/cv_ddcolor_image-colorization/pytorch_model.pt
   strict_load_g: false
   resume_state: ~
 
 # training settings
 train:
   color_enhance: True
-  color_enhance_factor: 1
+  color_enhance_factor: 1.
   optim_g:
     type: AdamW
     lr: !!float 1e-4
@@ -101,7 +101,7 @@ train:
     milestones: [80000, 120000, 160000, 200000, 240000, 280000, 320000, 360000]
     gamma: 0.5
 
-  total_iter: 20000
+  total_iter: 40000
   warmup_iter: -1  # no warm up
 
   # losses

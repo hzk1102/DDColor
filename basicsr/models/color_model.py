@@ -114,30 +114,30 @@ class ColorModel(BaseModel):
         #         logger = get_root_logger()
         #         logger.warning(f'Params {k} will not be optimized.')
 
-        # optim_params_g = self.net_g.parameters()
+        optim_params_g = self.net_g.parameters()
 
         # =========================================================
         # 1. SETUP GENERATOR (NET_G) - FREEZE ENCODER & DECODER
         # =========================================================
-        logger = get_root_logger()
-        optim_params_g = []
-        logger.info(f"\n{'='*40}")
-        logger.info(f"🔒 MODE: G - encoder FREEZE")
+        # logger = get_root_logger()
+        # optim_params_g = []
+        # logger.info(f"\n{'='*40}")
+        # logger.info(f"🔒 MODE: G - encoder FREEZE")
         
-        for k, v in self.net_g.named_parameters():
-            # Logic: Nếu tên chứa encoder hoặc decoder thì KHÓA
-            if 'encoder' in k: # or 'decoder' in k:
-                v.requires_grad = False 
+        # for k, v in self.net_g.named_parameters():
+        #     # Logic: Nếu tên chứa encoder hoặc decoder thì KHÓA
+        #     if 'encoder' in k: # or 'decoder' in k:
+        #         v.requires_grad = False 
             
-            # Những cái còn lại (RefineNet) thì MỞ
-            if v.requires_grad:
-                optim_params_g.append(v)
+        #     # Những cái còn lại (RefineNet) thì MỞ
+        #     if v.requires_grad:
+        #         optim_params_g.append(v)
 
-        # In thống kê G
-        total_g = sum(p.numel() for p in self.net_g.parameters())
-        train_g = sum(p.numel() for p in optim_params_g)
-        logger.info(f"   - Tổng tham số G: {total_g:,}")
-        logger.info(f"   - Tham số G sẽ train: {train_g:,} (Chiếm {train_g/total_g:.1%})")
+        # # In thống kê G
+        # total_g = sum(p.numel() for p in self.net_g.parameters())
+        # train_g = sum(p.numel() for p in optim_params_g)
+        # logger.info(f"   - Tổng tham số G: {total_g:,}")
+        # logger.info(f"   - Tham số G sẽ train: {train_g:,} (Chiếm {train_g/total_g:.1%})")
 
         # # =========================================================
         # # 2. SETUP DISCRIMINATOR (NET_D) - TRAIN LAST LAYER ONLY
