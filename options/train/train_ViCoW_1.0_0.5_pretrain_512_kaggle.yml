@@ -1,5 +1,5 @@
 # general settings
-name: train_ViCoW_1.0_0.5_freeze_g_pretrain_512_kaggle
+name: train_ViCoW_1.0_0.5_pretrain_512_kaggle
 model_type: ColorModel
 scale: 1
 num_gpu: 1
