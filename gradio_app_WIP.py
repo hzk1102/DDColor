@@ -12,7 +12,7 @@ import gradio as gr
 import uuid
 
 # --- CẤU HÌNH MODEL ---
-model_path = 'experiments/train_ViCoW_1.2_0.5_freeze_ED_g_pretrain/models/net_g_20000.pth'  # Đường dẫn tới model đã huấn luyện
+model_path = 'experiments/train_ViCoW_1.0_0.5_freeze_g_nonorm_pretrain_512_kaggle/models/net_g_20000.pth'  # Đường dẫn tới model đã huấn luyện
 input_size = 512
 model_size = 'large'
 
@@ -107,7 +107,7 @@ with gr.Blocks() as demo:
             
         # Cột bên phải: Output (Dùng gr.Image chuẩn thay vì Slider)
         with gr.Column():
-            output_img = gr.Image(label="Ảnh màu (Output)", type="numpy")
+            output_img = gr.Image(label="Ảnh màu (Output)", type="numpy", format="jpeg")
 
     # Kết nối nút bấm
     btn.click(fn=colorize, inputs=input_img, outputs=output_img)
