@@ -1,8 +1,8 @@
 # ignored folders
 datasets/*
-experiments/*
+# experiments/*
 results/*
-tb_logger/*
+tb_logger/*s
 wandb/*
 tmp/*
 
@@ -26,6 +26,7 @@ version.py
 *.zip
 *.npy
 *.pt
+*.state
 
 # template
 
